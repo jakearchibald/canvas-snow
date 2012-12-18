@@ -60,7 +60,12 @@
       settleCanvas.height = canvas.height = windowSize.height;
     }
     
+    var flakesToCreate = 0;
     function frame() {
+      flakesToCreate += (snowflakesPerPixelPerSecond / fps) * canvas.width;
+      var flakesThisFrame = Math.floor(flakesToCreate);
+      flakesToCreate -= flakesThisFrame;
+      
       // clear canvas
       if (windowResized) {
         resizeCanvas();
@@ -71,7 +76,7 @@
       }
       
       // add new flake?
-      if ( Math.random() < (canvas.width * snowflakesPerPixelPerSecond) / fps ) {  
+      while ( flakesThisFrame-- ) {  
         activeFlakes.push( new Snowflake(canvas.width) );
       }
       
