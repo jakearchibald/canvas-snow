@@ -7,6 +7,14 @@
   var html = document.documentElement;
 
   function Snowflake(maxX) {
+    this.reset(maxX);
+  }
+  Snowflake.prototype.tick = function() {
+    var sidePhase = this.sidePhase += this.sideVel;
+    this.y += this.vel;
+    this.x = this.midX + Math.sin(sidePhase) * this.sideAmp;
+  };
+  Snowflake.prototype.reset = function(maxX) {
     var rand = Math.random();
     var sizeRand;
     var chanceOfLargeSnowflake = 0.15;
@@ -30,11 +38,10 @@
     this.sidePhase = 0;
     this.sideAmp = sizeRand * 40;
     this.sideVel = Math.random() * 0.05;
-  }
-  Snowflake.prototype.tick = function() {
-    var sidePhase = this.sidePhase += this.sideVel;
-    this.y += this.vel;
-    this.x = this.midX + Math.sin(sidePhase) * this.sideAmp;
+
+    this.x = 0;
+
+    return this;
   };
   
   (function() {
@@ -50,6 +57,7 @@
     var PIx2 = Math.PI*2;
     var assumedFps = 60;
     var settlePoint;
+    var snowflakePool = [];
 
     function resizeCanvas() {
       settlePoint = Array(html.clientWidth);
@@ -94,7 +102,12 @@
       
       // add new flake?
       while ( flakesThisFrame-- ) {
-        activeFlakes.push( new Snowflake(canvas.width) );
+        if (snowflakePool.length) {
+          activeFlakes.push( snowflakePool.pop().reset(canvas.width) );
+        }
+        else {
+          activeFlakes.push( new Snowflake(canvas.width) );
+        }
       }
       
       var i = activeFlakes.length;
@@ -107,7 +120,7 @@
         
         // splice flake if it's now out of rendering zone
         if (flake.y >= canvas.height || flake.y >= settlePoint[Math.floor(flake.x)]) {
-          activeFlakes.splice(i, 1);
+          snowflakePool.push.apply(snowflakePool, activeFlakes.splice(i, 1));
           // this flake effects our settle points
           if (flake.alpha > 0.8) {
             updateSettlePoints(flake);
