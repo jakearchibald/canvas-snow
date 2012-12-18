@@ -11,8 +11,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     meta: {
       jsfiles: [
-        'www/static/js/1.js',
-        'www/static/js/2.js'
+        'www/static/js/snow.js'
       ]
     },
     concat: {
@@ -89,6 +88,9 @@ module.exports = function(grunt) {
     }
   });
 
-  // Default task.
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'sass:dist']);
+  grunt.registerTask('server', function() {
+    this.async();
+    require('./index.js');
+  });
 };
