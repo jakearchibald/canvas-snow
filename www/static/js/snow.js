@@ -1,6 +1,11 @@
 (function() {
+  var requestAnimationFrame = window.requestAnimationFrame       ||
+                              window.webkitRequestAnimationFrame ||
+                              window.mozRequestAnimationFrame    ||
+                              function(func) { setTimeout(func, 17); };
+
   var html = document.documentElement;
-  
+
   function Snowflake(maxX) {
     var rand = Math.random();
     var sizeRand;
@@ -122,6 +127,7 @@
         context.closePath();
         context.fill();
       }
+      requestAnimationFrame(frame);
     }
     
     if (context) {
@@ -144,7 +150,7 @@
       // add it to the page & start animating
       document.body.appendChild(canvas);
       document.body.appendChild(settleCanvas);
-      setInterval(frame, 1000 / assumedFps);
+      requestAnimationFrame(frame);
     }
   })();
   
