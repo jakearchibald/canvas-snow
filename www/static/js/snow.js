@@ -43,7 +43,7 @@
     var activeFlakes = [];
     var snowflakesPerPixelPerSecond = 0.02;
     var PIx2 = Math.PI*2;
-    var fps = 60;
+    var assumedFps = 60;
       
     function resizeCanvas() {
       settleCanvas.width = canvas.width = html.clientWidth;
@@ -52,7 +52,7 @@
     
     var flakesToCreate = 0;
     function frame() {
-      flakesToCreate += (snowflakesPerPixelPerSecond / fps) * canvas.width;
+      flakesToCreate += (snowflakesPerPixelPerSecond / assumedFps) * canvas.width;
       var flakesThisFrame = Math.floor(flakesToCreate);
       flakesToCreate -= flakesThisFrame;
       
@@ -118,7 +118,7 @@
       // add it to the page & start animating
       document.body.appendChild(canvas);
       document.body.appendChild(settleCanvas);
-      setInterval(frame, 1000 / fps);
+      setInterval(frame, 1000 / assumedFps);
     }
   })();
   
