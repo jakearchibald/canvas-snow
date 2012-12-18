@@ -1,8 +1,8 @@
 (function() {
   function getWindowSize() {
-    var isCompat = window.document.compatMode === "CSS1Compat",
-      html = document.documentElement,
-      body = document.body;
+    var isCompat = window.document.compatMode === "CSS1Compat";
+    var html = document.documentElement;
+    var body = document.body;
     
     return {
       width:  isCompat && html.clientWidth  || body.clientWidth,
@@ -11,9 +11,9 @@
   }
   
   function Snowflake(maxX) {
-    var rand = Math.random(),
-      sizeRand,
-      chanceOfLargeSnowflake = 0.15;
+    var rand = Math.random();
+    var sizeRand;
+    var chanceOfLargeSnowflake = 0.15;
     
     if (Math.random() < chanceOfLargeSnowflake) {
       sizeRand = Math.random() * 0.9 + 0.1;
@@ -33,7 +33,7 @@
     // side-to-side movement
     this.sidePhase = 0;
     this.sideAmp = sizeRand * 40;
-    this.sideVel = Math.random() * 0.05;  
+    this.sideVel = Math.random() * 0.05;
   }
   Snowflake.prototype.tick = function() {
     var sidePhase = this.sidePhase += this.sideVel;
@@ -41,18 +41,18 @@
     this.x = this.midX + Math.sin(sidePhase) * this.sideAmp;
   };
   
-  (function() {  
-    var canvas = document.createElement('canvas'),
-      context = canvas.getContext && canvas.getContext('2d'),
-      settleCanvas = document.createElement('canvas'),
-      settleContext = context && settleCanvas.getContext('2d'),
-      canvasStyle = canvas.style,
-      settleCanvasStyle = settleCanvas.style,
-      windowResized,
-      activeFlakes = [],
-      snowflakesPerPixelPerSecond = 0.02,
-      PIx2 = Math.PI*2,
-      fps = 60;
+  (function() {
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext && canvas.getContext('2d');
+    var settleCanvas = document.createElement('canvas');
+    var settleContext = context && settleCanvas.getContext('2d');
+    var canvasStyle = canvas.style;
+    var settleCanvasStyle = settleCanvas.style;
+    var windowResized;
+    var activeFlakes = [];
+    var snowflakesPerPixelPerSecond = 0.02;
+    var PIx2 = Math.PI*2;
+    var fps = 60;
       
     function resizeCanvas() {
       var windowSize = getWindowSize();
@@ -71,17 +71,17 @@
         resizeCanvas();
         windowResized = false;
       }
-      else {  
+      else {
         context.clearRect(0, 0, canvas.width, canvas.height);
       }
       
       // add new flake?
-      while ( flakesThisFrame-- ) {  
+      while ( flakesThisFrame-- ) {
         activeFlakes.push( new Snowflake(canvas.width) );
       }
       
-      var i = activeFlakes.length,
-        flake;
+      var i = activeFlakes.length;
+      var flake;
       
       // for each flake...
       while (i--) {
