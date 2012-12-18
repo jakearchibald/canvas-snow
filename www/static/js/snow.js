@@ -12,34 +12,23 @@
   Snowflake.prototype.tick = function() {
     var sidePhase = this.sidePhase += this.sideVel;
     this.y += this.vel;
-    this.x = this.midX + Math.sin(sidePhase) * this.sideAmp;
+    this.x += this.sideVel;
   };
   Snowflake.prototype.reset = function(maxX) {
     var rand = Math.random();
-    var sizeRand;
     var chanceOfLargeSnowflake = 0.15;
     
-    if (Math.random() < chanceOfLargeSnowflake) {
-      sizeRand = Math.random() * 0.9 + 0.1;
-    }
-    else {
-      sizeRand = Math.random() * 0.1;
-    }
-    
-    this.size = sizeRand * 20 + 2.5;
-    this.vel = sizeRand * 4 + 1;
-    this.alpha = (1 - sizeRand * 0.9);
+    this.size = 2 + Math.random() * 5;
+    this.vel = 3 + Math.random() * 3;
+    this.alpha = 0.5 + Math.random() * 0.8;
     
     // random x position
-    this.midX = Math.random() * maxX;
+    this.x = Math.random() * maxX;
     this.y = -this.size;
     
     // side-to-side movement
-    this.sidePhase = 0;
-    this.sideAmp = sizeRand * 40;
-    this.sideVel = Math.random() * 0.05;
+    this.sideVel = (0.5 - Math.random()) * this.vel;
 
-    this.x = 0;
 
     return this;
   };
@@ -53,7 +42,7 @@
     var settleCanvasStyle = settleCanvas.style;
     var windowResized;
     var activeFlakes = [];
-    var snowflakesPerPixelPerSecond = 0.02;
+    var snowflakesPerPixelPerSecond = 0.05;
     var PIx2 = Math.PI*2;
     var assumedFps = 60;
     var settlePoint;
@@ -75,7 +64,7 @@
         range += xStart;
         xStart = 0;
       }
-      else if (xStart + range > settlePoint.length) {
+      if (xStart + range > settlePoint.length) {
         range -= xStart + range - settlePoint.length;
       }
 
@@ -109,7 +98,7 @@
           activeFlakes.push( new Snowflake(canvas.width) );
         }
       }
-      
+
       var i = activeFlakes.length;
       var flake;
       
