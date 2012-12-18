@@ -1,14 +1,5 @@
 (function() {
-  function getWindowSize() {
-    var isCompat = window.document.compatMode === "CSS1Compat";
-    var html = document.documentElement;
-    var body = document.body;
-    
-    return {
-      width:  isCompat && html.clientWidth  || body.clientWidth,
-      height: isCompat && html.clientHeight || body.clientHeight
-    };
-  }
+  var html = document.documentElement;
   
   function Snowflake(maxX) {
     var rand = Math.random();
@@ -55,9 +46,8 @@
     var fps = 60;
       
     function resizeCanvas() {
-      var windowSize = getWindowSize();
-      settleCanvas.width = canvas.width = windowSize.width;
-      settleCanvas.height = canvas.height = windowSize.height;
+      settleCanvas.width = canvas.width = html.clientWidth;
+      settleCanvas.height = canvas.height = html.clientHeight;
     }
     
     var flakesToCreate = 0;
