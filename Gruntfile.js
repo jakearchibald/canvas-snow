@@ -90,7 +90,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'sass:dist']);
   grunt.registerTask('server', function() {
-    this.async();
     require('./index.js');
   });
+
+  grunt.registerTask('watchserver', ['server', 'watch']);
 };
