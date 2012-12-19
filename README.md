@@ -137,6 +137,6 @@ I hope other browsers get a frame-by-frame breakdown of events similar or better
 
 # A bit of artistic direction
 
-[Paul Lewis (@aerotwist)](https://twitter.com/aerotwist) was extremely dissatisfied with my snowflake simulation, and offered up some tips. We got rid of the side-to-side wobble, instead giving each flake a constant x-velocity, tweaked the sizes a bit, And since we're hitting 60fps pretty easily... **moar snow!** [It looks much better I reckon](http://jakearchibald.github.com/canvas-snow/5.html) ([diff](https://github.com/jakearchibald/canvas-snow/commit/27aab34f27c14700d0086ca64ccfa4ffe9f9359a)).
+[Paul Lewis (@aerotwist)](https://twitter.com/aerotwist) was extremely dissatisfied with my snowflake simulation, and offered up some tips (well, he grabbed my keyboard, hit me with it a bit, then made some changes). He got rid of the side-to-side wobble, instead giving each flake a constant x-velocity, tweaked the sizes a bit, and since we're hitting 60fps pretty easily... **moar snow!** [It looks much better I reckon](http://jakearchibald.github.com/canvas-snow/5.html) ([diff](https://github.com/jakearchibald/canvas-snow/commit/27aab34f27c14700d0086ca64ccfa4ffe9f9359a)).
 
 And with that, I wish you a holiday free of inappropriate lumps!
