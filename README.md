@@ -1,3 +1,3 @@
-# Basic express app for low-level frontend development
+# Some snow, in canvas
 
-Featuring grunt & sass
+A little experiment for an article.
