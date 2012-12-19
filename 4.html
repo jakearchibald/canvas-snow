@@ -9,9 +9,22 @@
 <body>
 <script>
 (function() {
+  var requestAnimationFrame = window.requestAnimationFrame       ||
+                              window.webkitRequestAnimationFrame ||
+                              window.mozRequestAnimationFrame    ||
+                              function(func) { setTimeout(func, 17); };
+
   var html = document.documentElement;
-  
+
   function Snowflake(maxX) {
+    this.reset(maxX);
+  }
+  Snowflake.prototype.tick = function() {
+    var sidePhase = this.sidePhase += this.sideVel;
+    this.y += this.vel;
+    this.x = this.midX + Math.sin(sidePhase) * this.sideAmp;
+  };
+  Snowflake.prototype.reset = function(maxX) {
     var rand = Math.random();
     var sizeRand;
     var chanceOfLargeSnowflake = 0.15;
@@ -35,16 +48,15 @@
     this.sidePhase = 0;
     this.sideAmp = sizeRand * 40;
     this.sideVel = Math.random() * 0.05;
-  }
-  Snowflake.prototype.tick = function() {
-    var sidePhase = this.sidePhase += this.sideVel;
-    this.y += this.vel;
-    this.x = this.midX + Math.sin(sidePhase) * this.sideAmp;
+
+    this.x = 0;
+
+    return this;
   };
   
   (function() {
     var canvas = document.createElement('canvas');
-    var context = canvas.getContext && canvas.getContext('2d');
+    var context = canvas.getContext('2d');
     var settleCanvas = document.createElement('canvas');
     var settleContext = context && settleCanvas.getContext('2d');
     var canvasStyle = canvas.style;
@@ -54,10 +66,33 @@
     var snowflakesPerPixelPerSecond = 0.02;
     var PIx2 = Math.PI*2;
     var assumedFps = 60;
-      
+    var settlePoint;
+    var snowflakePool = [];
+
     function resizeCanvas() {
+      settlePoint = Array(html.clientWidth);
       settleCanvas.width = canvas.width = html.clientWidth;
       settleCanvas.height = canvas.height = html.clientHeight;
+    }
+
+    function updateSettlePoints(flake) {
+      var size = flake.size * 0.8; // reduce coral effect
+      var xStart = Math.floor(flake.x - size);
+      var range = size * 2;
+      var newY;
+
+      if (xStart < 0) {
+        range += xStart;
+        xStart = 0;
+      }
+      else if (xStart + range > settlePoint.length) {
+        range -= xStart + range - settlePoint.length;
+      }
+
+      for (var i = 0; i < range; i++) {
+        newY = flake.y - (size * Math.cos( (i/range) * Math.PI - (Math.PI/2) ));
+        settlePoint[i + xStart] = Math.min(settlePoint[i + xStart] || Infinity, newY);
+      }
     }
     
     var flakesToCreate = 0;
@@ -77,7 +112,12 @@
       
       // add new flake?
       while ( flakesThisFrame-- ) {
-        activeFlakes.push( new Snowflake(canvas.width) );
+        if (snowflakePool.length) {
+          activeFlakes.push( snowflakePool.pop().reset(canvas.width) );
+        }
+        else {
+          activeFlakes.push( new Snowflake(canvas.width) );
+        }
       }
       
       var i = activeFlakes.length;
@@ -89,8 +129,12 @@
         flake.tick();
         
         // splice flake if it's now out of rendering zone
-        if (flake.y > canvas.height || settleContext.getImageData(flake.x, flake.y, 1, 1).data[3] > 200) {
-          activeFlakes.splice(i, 1);
+        if (flake.y >= canvas.height || flake.y >= settlePoint[Math.floor(flake.x)]) {
+          snowflakePool.push.apply(snowflakePool, activeFlakes.splice(i, 1));
+          // this flake effects our settle points
+          if (flake.alpha > 0.8) {
+            updateSettlePoints(flake);
+          }
           settleContext.fillStyle='rgba(255, 255, 255, ' + flake.alpha + ')';
           settleContext.beginPath();
           settleContext.arc(flake.x, flake.y, flake.size, 0, PIx2, true);
@@ -106,6 +150,7 @@
         context.closePath();
         context.fill();
       }
+      requestAnimationFrame(frame);
     }
     
     if (context) {
@@ -128,7 +173,7 @@
       // add it to the page & start animating
       document.body.appendChild(canvas);
       document.body.appendChild(settleCanvas);
-      setInterval(frame, 1000 / assumedFps);
+      requestAnimationFrame(frame);
     }
   })();
   
