@@ -121,6 +121,7 @@ function frame() {
   }
   // ...
 }
+```
 
 Here I move my constructor stuff to a reset method, so an existing object can be reconstructed. When a snowflake lands, it's put into an array for reuse rather than being thrown away. When a new snowflake is needed, we take one from the pool, or create a new one if the pool is empty. How does that look?
 
