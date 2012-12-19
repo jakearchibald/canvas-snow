@@ -131,7 +131,7 @@ Here I move my constructor stuff to a reset method, so an existing object can be
 
 I hope other browsers get a frame-by-frame breakdown of events similar or better than Chrome's, it's dead handy (disclaimer: I work for Google, probably biased).
 
- * [this](http://www.youtube.com/watch?v=N5IlA4ehJck)
+*[this](http://www.youtube.com/watch?v=N5IlA4ehJck)
 
 # A bit of artistic direction
 
