@@ -1,8 +1,10 @@
-Other peoples' code is awful, and your own code from months previous counts as someone else's. With this and the festive spirit in mind, [I dug up a canvas snow demo I made two years ago](http://jakearchibald.github.com/canvas-snow/1.html).
+# Snow in canvas land
+
+Other peoples' code is awful, and your own code from months previous counts as someone else's. With this and the festive spirit in mind, [I dug up a canvas snow demo I made two years ago](http://jakearchibald.github.com/canvas-snow/1.html) to see how bad my code really was.
 
 # How does it work?
 
-Snowflake objects are created with a radius, opacity, y-velocity, and x-range (they drift from size to size). As they fall, they're drawn to a canvas, this canvas is cleared on every frame. When snowflakes land, they're drawn to another canvas, and the Snowflake is removed from the "active snowflakes" list. The second canvas is never cleared, snowflakes shapes are added as they land, meaning I don't have to redraw all the landed snowflakes per frame.
+Snowflake objects are created with a radius, opacity, y-velocity, and x-range (they drift from side to side). As they fall, they're drawn to a canvas, this canvas is cleared on every frame. When snowflakes land, they're drawn to another canvas, and the Snowflake is removed from the "active snowflakes" list. The second canvas is never cleared, snowflakes shapes are added as they land, meaning I don't have to redraw all the landed snowflakes per frame.
 
 Two years of browser development later, what's wrong with it?
 
@@ -34,9 +36,9 @@ There are better articles on [why requestAnimtionFrame is great](http://www.html
 
 ![Chrome Devtools](http://jakearchibald.github.com/canvas-snow/no-raf-jolt.png)
 
-Here the yellow boxes represent JS triggered by `setTimeout`, the green boxes are drawn frames. The JS blocks appear before the draw, but they're out of sync, they get closer and closer until they block a draw, then the draws happen before the timer, until of course they swap over again and you get another missed draw. These dropped frames are a noticeable jolt visually.
+Here the yellow boxes represent JS triggered by `setTimeout`, the green boxes are drawn frames. The JS blocks appear before the draw, but they're out of sync. They get closer and closer until they block a draw, then the draws happen before the timers, until of course they swap over again and you get another missed draw. These dropped frames are a noticeable jolt visually.
 
-Let's fix this, instead of...
+Let's fix this. Instead of...
 
 ```javascript
 function frame() {
@@ -55,12 +57,12 @@ var requestAnimationFrame = window.requestAnimationFrame ||
 
 function frame() {
 	// ...
-	raf(frame);
+	requestAnimationFrame(frame);
 }
-raf(frame);
+requestAnimationFrame(frame);
 ```
 
-[Here's the version using raf](http://jakearchibald.github.com/canvas-snow/3.html)([diff](https://github.com/jakearchibald/canvas-snow/commit/f8c310f76f444fb20caad0407d5f80698739a934)).The difference is noticable across all browsers except Opera (which doesn't support requestAnimationFrame yet), especially if you're not running at 60hz as the old `setTimeout` assumed. Here's how the Chrome frame view looks now:
+[Here's the version using requestAnimationFrame](http://jakearchibald.github.com/canvas-snow/3.html) ([diff](https://github.com/jakearchibald/canvas-snow/commit/f8c310f76f444fb20caad0407d5f80698739a934)).The difference is noticable across all browsers except Opera (which doesn't support requestAnimationFrame yet), especially if you're not running at 60hz as the old `setTimeout` assumed. Here's how Chrome's frame view looks now:
 
 ![Chrome Devtools](http://jakearchibald.github.com/canvas-snow/with-raf.png)
 
@@ -77,7 +79,7 @@ We're so close 60fps in Chrome, but as you can see from the screenshot above, we
 A frame was missed due to garbage collection. The most explicit bit of object creation & dereferencing I do is with the snowflakes:
 
 ```javascript
-function Snowflake(maxX) {
+function Snowflake() {
   // ...
 }
 
@@ -96,7 +98,7 @@ function frame() {
 Throwing objects away and creating similar new ones is a waste (cut to scene of Native American with tear in eye), let's fix that with some recycling:
 
 ```javascript
-function Snowflake(maxX) {
+function Snowflake() {
   this.reset();
 }
 Snowflake.prototype.reset = function() {
