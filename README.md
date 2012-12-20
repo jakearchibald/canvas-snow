@@ -28,7 +28,7 @@ This slowdown wasn't there when I first made the demo, so something's changed in
 
 I decide a flake has landed when the pixel beneath it on the "landed" canvas is above 80% opacity. I only test one pixel per flake, but that happens every frame. That's more effort for some browsers than it used to be.
 
-It wasn't clear why at first, but [Tab Atkins pointed me in the right direction](TODO). When I originally made the demo, 2D canvas operations were software-driven. These days, depending on the browser, most of the drawing work is done on the GPU. This is much faster, until JavaScript wants to know the pixel data. When this happens, the image data (or a portion of it) gets transferred from graphics memory to RAM. This is where performance falls away.
+It wasn't clear why at first, but [Tab Atkins pointed me in the right direction](https://twitter.com/tabatkins/status/281496802908319744). When I originally made the demo, 2D canvas operations were software-driven. These days, depending on the browser, most of the drawing work is done on the GPU. This is much faster, until JavaScript wants to know the pixel data. When this happens, the image data (or a portion of it) gets transferred from graphics memory to RAM. This is where performance falls away.
 
 Instead of checking the canvas to determine if a flake should land, I maintain an array with length equal to the width of the canvas, where each item is the y-position that snowflakes cannot continue beyond for that x-position. When a snowflake lands, the array is updated, adding the new snowflake to its representation of the terrain.
 
@@ -151,6 +151,6 @@ I hope other browsers get a frame-by-frame breakdown of events similar or better
 
 # Not perfect yet
 
-If you run the [final demo](http://jakearchibald.github.com/canvas-snow/5.html) in Chrome and check out the memory timeline (open devtools > timeline > memory > press record). There's still a memory build-up, but the tools aren't making it easy to determine what that build-up is. Chrome's the only browser to provide this kind of memory use timeline at the moment, but it's by no means 'done'. Look out for improvements to these tools in the coming months, and check out [Chrome Canary](TODO) if you want a sneak peek of the features in development.
+If you run the [final demo](http://jakearchibald.github.com/canvas-snow/5.html) in Chrome and check out the memory timeline (open devtools > timeline > memory > press record). There's still a memory build-up, but the tools aren't making it easy to determine what that build-up is. Chrome's the only browser to provide this kind of memory use timeline at the moment, but it's by no means 'done'. Look out for improvements to these tools in the coming months, and check out [Chrome Canary](https://www.google.com/intl/en/chrome/browser/canary.html) if you want a sneak peek at the features in development.
 
 And with that, I wish you a holiday free of inappropriate lumps!
